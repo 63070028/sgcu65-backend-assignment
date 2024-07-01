@@ -1,7 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
 
-@Entity()
+@Entity("tasks")
 export class Task{
     @PrimaryGeneratedColumn()
     id!:number
@@ -15,8 +15,7 @@ export class Task{
     @Column()
     deadline:string
 
-    @ManyToMany(() => User)
-    @JoinTable()
+    @ManyToMany(() => User, (user) => user.tasks)
     users?: User[]
 
     constructor(name:string, contend:string, status:string, deadline:string, users?:User[]){

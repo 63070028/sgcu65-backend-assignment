@@ -23,7 +23,7 @@ const swaggerDefinition = {
 // Options for the swagger docs
 const options = {
     swaggerDefinition,
-    apis: ['./src/index.ts'], // Path to your API files
+    apis: ['./src/routes/task.ts'], // Path to your API files
 };
 
 // Initialize swagger-jsdoc

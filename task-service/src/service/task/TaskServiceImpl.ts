@@ -1,11 +1,12 @@
 import { Repository } from "typeorm";
-import { Task } from "../entity/Task";
-import { taskService } from "./taskService";
-import { createTaskRequest } from "../model/request/createTaskRequest";
-import { removeTaskRequest } from "../model/request/removeTaskRequest";
-import { updateTaskRequest } from "../model/request/updateTaskRequest";
+import { Task } from "../../models/entity/Task";
+import { TaskService } from "./taskService";
+import { createTaskRequest } from "../../models/request/createTaskRequest";
+import { updateTaskRequest } from "../../models/request/updateTaskRequest";
+import { removeTaskRequest } from "../../models/request/removeTaskRequest";
 
-export class taskServiceImpl implements taskService{
+
+export class TaskServiceImpl implements TaskService{
 
     private repository: Repository<Task>
 

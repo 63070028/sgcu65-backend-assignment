@@ -1,5 +1,3 @@
-import { User } from "../../entity/User"
-
 export interface updateTaskRequest{
     id:number
     name:string
