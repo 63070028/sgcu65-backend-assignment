@@ -1,4 +1,4 @@
-export interface updateTaskRequest{
+export interface UpdateTaskRequest{
     id:number
     name:string
     content:string

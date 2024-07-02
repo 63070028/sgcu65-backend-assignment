@@ -1,6 +1,7 @@
-import { User } from "../entity/User"
+import { User } from "../../user/model/User"
 
-export interface createTaskRequest{
+
+export interface CreateTaskRequest{
     name:string
     content:string
     status:string

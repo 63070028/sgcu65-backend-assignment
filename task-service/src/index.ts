@@ -2,18 +2,16 @@ import express from "express";
 import dotnev from "dotenv";
 import { AppDataSource } from "./data-source";
 import { setupSwagger } from "./swagger";
-import taskRoute from "./routes/task";
+import taskRouter from "./task/TaskRouter"
 
 
 dotnev.config();
-
 const app = express();
 const port = process.env.PORT;
-
 setupSwagger(app);
 
 app.use(express.json());
-app.use("/tasks", taskRoute);
+app.use("/tasks", taskRouter);
 
 
 app.listen(port, async ()=>{
@@ -25,6 +23,5 @@ app.listen(port, async ()=>{
             console.error('Error during Data Source initialization:', error.message);
             console.error(error.stack);
         });
-
     console.log(`[server]: task-service is running at http://localhost:${port}`)
 })

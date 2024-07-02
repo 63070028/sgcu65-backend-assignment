@@ -1,14 +1,15 @@
 import { Router, Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
-import { Task } from '../models/entity/Task';
-import { TaskServiceImpl } from '../service/task/taskServiceImpl';
-import { createTaskRequest } from '../models/request/createTaskRequest';
-import { updateTaskRequest } from '../models/request/updateTaskRequest';
-import { removeTaskRequest } from '../models/request/removeTaskRequest';
-import { setupSwagger } from '../swagger';
+import { Task } from './models/Task';
+import { TaskServiceImpl } from './service/TaskServiceImpl';
+import { CreateTaskRequest } from './models/CreateTaskRequest';
+import { UpdateTaskRequest } from './models/UpdateTaskRequest';
+import { RemoveTaskRequest } from './models/RemoveTaskRequest';
 
 const router = Router();
+
 const repository = AppDataSource.getRepository(Task);
+
 const service = new TaskServiceImpl(repository);
 
 /**
@@ -42,6 +43,7 @@ router.get("/", async (req:Request, res:Response<Task[]>)=>{
         res.send(tasks);
     }).catch(err => {
         console.log(err);
+        res.status(500).send(err);
     })
 })
 
@@ -100,11 +102,12 @@ router.get("/", async (req:Request, res:Response<Task[]>)=>{
  *                 deadline:
  *                   type: string
  */
-router.post("/", async (req:Request<createTaskRequest>, res:Response<Task>) => {
+router.post("/", async (req:Request<CreateTaskRequest>, res:Response<Task>) => {
     await service.create(req.body).then(task => {
         res.send(task);
     }).catch(err => {
         console.log(err);
+        res.status(500).send(err);
     })
 })
 
@@ -149,11 +152,12 @@ router.post("/", async (req:Request<createTaskRequest>, res:Response<Task>) => {
  *                 deadline:
  *                   type: string
  */
-router.put("/", async(request:Request<updateTaskRequest>, res:Response<Task>) => {
+router.put("/", async(request:Request<UpdateTaskRequest>, res:Response<Task>) => {
     await service.update(request.body).then(task => {
         res.send(task);
     }).catch(err => {
         console.log(err);
+        res.status(404).send(err);
     })
 })
 
@@ -190,17 +194,18 @@ router.put("/", async(request:Request<updateTaskRequest>, res:Response<Task>) =>
  *                 deadline:
  *                   type: string
  */
-router.delete("/", async(request:Request<removeTaskRequest>, res:Response<Task>) => {
+router.delete("/", async(request:Request<RemoveTaskRequest>, res:Response<Task>) => {
     await service.remove(request.body).then(task => {
         res.send(task);
     }).catch(err => {
         console.log(err);
+        res.status(404).send(err);
     })
 })
 
 /**
  * @swagger
- * /tasks/id/{id}:
+ * /tasks/findById/{id}:
  *   get:
  *     summary: Retrieve a single task by ID
  *     parameters:
@@ -242,19 +247,20 @@ router.delete("/", async(request:Request<removeTaskRequest>, res:Response<Task>)
  *       404:
  *         description: Task not found
  */
-router.get("/id/:id", async(request:Request, res:Response<Task>) => {
+router.get("/findById/:id", async(request:Request, res:Response<Task>) => {
     const id = Number(request.params.id);
     await service.findById(id).then(task => {
         res.send(task);
     }).catch(err => {
         console.log(err);
+        res.status(404).send(err);
     })
 })
 
 
 /**
  * @swagger
- * /tasks/name/{name}:
+ * /tasks/findByName/{name}:
  *   get:
  *     summary: Retrieve a single task by Name
  *     parameters:
@@ -296,12 +302,13 @@ router.get("/id/:id", async(request:Request, res:Response<Task>) => {
  *       404:
  *         description: Task not found
  */
-router.get("/name/:name", async(request:Request, res:Response<Task>) => {
+router.get("/findByName/:name", async(request:Request, res:Response<Task>) => {
     const name = String(request.params.name);
     await service.findByName(name).then(task => {
         res.send(task);
     }).catch(err => {
         console.log(err);
+        res.status(404).send(err);
     })
 })
 

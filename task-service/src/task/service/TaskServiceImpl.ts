@@ -1,9 +1,9 @@
 import { Repository } from "typeorm";
-import { Task } from "../../models/entity/Task";
-import { TaskService } from "./taskService";
-import { createTaskRequest } from "../../models/request/createTaskRequest";
-import { updateTaskRequest } from "../../models/request/updateTaskRequest";
-import { removeTaskRequest } from "../../models/request/removeTaskRequest";
+import { Task } from "../models/Task";
+import { TaskService } from "./TaskService";
+import { CreateTaskRequest } from "../models/CreateTaskRequest";
+import { UpdateTaskRequest } from "../models/UpdateTaskRequest";
+import { RemoveTaskRequest } from "../models/RemoveTaskRequest";
 
 
 export class TaskServiceImpl implements TaskService{
@@ -14,8 +14,9 @@ export class TaskServiceImpl implements TaskService{
         this.repository = repository;
     }
 
-    findAll(): Promise<Task[]>{
-        return this.repository.find();
+    async findAll(): Promise<Task[]>{
+        let tasks = await this.repository.find();
+        return tasks;
     }
     
     async findById(id:number):Promise<Task>{
@@ -27,7 +28,6 @@ export class TaskServiceImpl implements TaskService{
                 return Promise.reject("task not found");
             }
         } catch (err) {
-            console.log(err);
             return Promise.reject(err);
         }
     }
@@ -46,7 +46,7 @@ export class TaskServiceImpl implements TaskService{
         }
     }
 
-    create(request:createTaskRequest):Promise<Task>{
+    async create(request:CreateTaskRequest):Promise<Task>{
         const task = new Task(
             request.name,
             request.content,
@@ -57,7 +57,7 @@ export class TaskServiceImpl implements TaskService{
         return this.repository.save(task);
     }
 
-    async update(request:updateTaskRequest):Promise<Task>{
+    async update(request:UpdateTaskRequest):Promise<Task>{
         try {
             const taskOld = await this.findById(request.id);
             if(taskOld != null){
@@ -71,7 +71,7 @@ export class TaskServiceImpl implements TaskService{
         }
     }
 
-    async remove(request:removeTaskRequest):Promise<Task>{
+    async remove(request:RemoveTaskRequest):Promise<Task>{
         try {
             const taskOld = await this.findById(request.id);
             if(taskOld != null){
