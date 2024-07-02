@@ -15,10 +15,13 @@ export class TaskServiceImpl implements TaskService{
     }
 
     async findAll(): Promise<Task[]>{
-        let tasks = await this.repository.find();
-        return tasks;
+        try {
+            let tasks = await this.repository.find();
+            return tasks;
+        } catch (error) {
+            return Promise.reject(error);
+        }
     }
-    
     async findById(id:number):Promise<Task>{
         try {
             const task = await this.repository.findOneBy({id: id});
@@ -27,8 +30,8 @@ export class TaskServiceImpl implements TaskService{
             }else{
                 return Promise.reject("task not found");
             }
-        } catch (err) {
-            return Promise.reject(err);
+        } catch (error) {
+            return Promise.reject(error);
         }
     }
 
@@ -40,48 +43,47 @@ export class TaskServiceImpl implements TaskService{
             }else{
                 return Promise.reject("task not found");
             }
-        } catch (err) {
-            console.log(err);
-            return Promise.reject(err);
+        } catch (error) {
+            return Promise.reject(error);
         }
     }
 
     async create(request:CreateTaskRequest):Promise<Task>{
-        const task = new Task(
+        try {
+            const task = new Task(
             request.name,
             request.content,
             request.status,
             request.deadline,
-            request.users
-        )
-        return this.repository.save(task);
+            request.users);
+            
+            return this.repository.save(task);
+        } catch (error) {
+            return Promise.reject(error);
+        } 
     }
 
     async update(request:UpdateTaskRequest):Promise<Task>{
         try {
-            const taskOld = await this.findById(request.id);
-            if(taskOld != null){
-                return this.repository.save(request);
-            }else{
-                return Promise.reject("task not found");
-            }
-        } catch (err) {
-            console.log(err);
-            return Promise.reject(err);
+            let task = await this.findById(request.id);
+
+            task.name = request.name;
+            task.content = request.content;
+            task.status = request.status;
+            task.deadline = request.deadline;
+
+            return this.repository.save(task);
+        } catch (error) {
+            return Promise.reject(error);
         }
     }
 
     async remove(request:RemoveTaskRequest):Promise<Task>{
         try {
-            const taskOld = await this.findById(request.id);
-            if(taskOld != null){
-                return this.repository.remove(taskOld);
-            }else{
-                return Promise.reject("task not found");
-            }
-        } catch (err) {
-            console.log(err);
-            return Promise.reject(err);
+            const task = await this.findById(request.id);
+            return this.repository.remove(task);
+        } catch (error) {
+            return Promise.reject(error);
         }
     }
 }

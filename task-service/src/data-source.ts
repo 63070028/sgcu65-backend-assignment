@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import { Task } from "./task/models/Task";
-import { User } from "./user/model/User";
+import { User } from "./user/models/User";
 import dotnev from "dotenv";
 
 dotnev.config();

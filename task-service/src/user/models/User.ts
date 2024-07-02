@@ -20,11 +20,10 @@ export class User{
     tasks?: Task[]
 
 
-    constructor(email:string, firstname:string, surname:string, role:string, tasks?: Task[]){
+    constructor(email:string, firstname:string, surname:string, role:string){
         this.email = email;
         this.firstname = firstname;
         this.surname = surname;
         this.role = role;
-        this.tasks = tasks;
     }
 }

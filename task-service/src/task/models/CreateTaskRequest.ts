@@ -1,4 +1,4 @@
-import { User } from "../../user/model/User"
+import { User } from "../../user/models/User"
 
 
 export interface CreateTaskRequest{

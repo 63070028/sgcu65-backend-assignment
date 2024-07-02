@@ -41,11 +41,122 @@ const service = new TaskServiceImpl(repository);
 router.get("/", async (req:Request, res:Response<Task[]>)=>{
     await service.findAll().then(tasks => {
         res.send(tasks);
-    }).catch(err => {
-        console.log(err);
-        res.status(500).send(err);
+    }).catch(error => {
+        console.log(error);
+        res.status(500).send(error);
     })
 })
+
+
+/**
+ * @swagger
+ * /tasks/findById/{id}:
+ *   get:
+ *     summary: Retrieve a single task by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The task ID
+ *     responses:
+ *       200:
+ *         description: A single task
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: The task ID
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   description: The task name
+ *                   example: Do the dishes
+ *                 content:
+ *                   type: string
+ *                   description: The task content
+ *                   example: Wash all the dishes in the sink
+ *                 status:
+ *                   type: string
+ *                   description: The task status
+ *                   example: In Progress
+ *                 deadline:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The task deadline
+ *                   example: 2024-12-31T23:59:59Z
+ *       404:
+ *         description: Task not found
+ */
+router.get("/findById/:id", async(request:Request, res:Response<Task>) => {
+    const id = Number(request.params.id);
+    await service.findById(id).then(task => {
+        res.send(task);
+    }).catch(error => {
+        console.log(error);
+        res.status(404).send(error);
+    })
+})
+
+
+/**
+ * @swagger
+ * /tasks/findByName/{name}:
+ *   get:
+ *     summary: Retrieve a single task by Name
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task name
+ *     responses:
+ *       200:
+ *         description: A single task
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: The task ID
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   description: The task name
+ *                   example: Do the dishes
+ *                 content:
+ *                   type: string
+ *                   description: The task content
+ *                   example: Wash all the dishes in the sink
+ *                 status:
+ *                   type: string
+ *                   description: The task status
+ *                   example: In Progress
+ *                 deadline:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The task deadline
+ *                   example: 2024-12-31T23:59:59Z
+ *       404:
+ *         description: Task not found
+ */
+router.get("/findByName/:name", async(request:Request, res:Response<Task>) => {
+    const name = String(request.params.name);
+    await service.findByName(name).then(task => {
+        res.send(task);
+    }).catch(error => {
+        console.log(error);
+        res.status(404).send(error);
+    })
+})
+
 
 
 /**
@@ -105,9 +216,9 @@ router.get("/", async (req:Request, res:Response<Task[]>)=>{
 router.post("/", async (req:Request<CreateTaskRequest>, res:Response<Task>) => {
     await service.create(req.body).then(task => {
         res.send(task);
-    }).catch(err => {
-        console.log(err);
-        res.status(500).send(err);
+    }).catch(error => {
+        console.log(error);
+        res.status(500).send(error);
     })
 })
 
@@ -155,9 +266,9 @@ router.post("/", async (req:Request<CreateTaskRequest>, res:Response<Task>) => {
 router.put("/", async(request:Request<UpdateTaskRequest>, res:Response<Task>) => {
     await service.update(request.body).then(task => {
         res.send(task);
-    }).catch(err => {
-        console.log(err);
-        res.status(404).send(err);
+    }).catch(error => {
+        console.log(error);
+        res.status(404).send(error);
     })
 })
 
@@ -197,120 +308,10 @@ router.put("/", async(request:Request<UpdateTaskRequest>, res:Response<Task>) =>
 router.delete("/", async(request:Request<RemoveTaskRequest>, res:Response<Task>) => {
     await service.remove(request.body).then(task => {
         res.send(task);
-    }).catch(err => {
-        console.log(err);
-        res.status(404).send(err);
+    }).catch(error => {
+        console.log(error);
+        res.status(404).send(error);
     })
 })
-
-/**
- * @swagger
- * /tasks/findById/{id}:
- *   get:
- *     summary: Retrieve a single task by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: The task ID
- *     responses:
- *       200:
- *         description: A single task
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                   description: The task ID
- *                   example: 1
- *                 name:
- *                   type: string
- *                   description: The task name
- *                   example: Do the dishes
- *                 content:
- *                   type: string
- *                   description: The task content
- *                   example: Wash all the dishes in the sink
- *                 status:
- *                   type: string
- *                   description: The task status
- *                   example: In Progress
- *                 deadline:
- *                   type: string
- *                   format: date-time
- *                   description: The task deadline
- *                   example: 2024-12-31T23:59:59Z
- *       404:
- *         description: Task not found
- */
-router.get("/findById/:id", async(request:Request, res:Response<Task>) => {
-    const id = Number(request.params.id);
-    await service.findById(id).then(task => {
-        res.send(task);
-    }).catch(err => {
-        console.log(err);
-        res.status(404).send(err);
-    })
-})
-
-
-/**
- * @swagger
- * /tasks/findByName/{name}:
- *   get:
- *     summary: Retrieve a single task by Name
- *     parameters:
- *       - in: path
- *         name: name
- *         required: true
- *         schema:
- *           type: string
- *         description: The task name
- *     responses:
- *       200:
- *         description: A single task
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                   description: The task ID
- *                   example: 1
- *                 name:
- *                   type: string
- *                   description: The task name
- *                   example: Do the dishes
- *                 content:
- *                   type: string
- *                   description: The task content
- *                   example: Wash all the dishes in the sink
- *                 status:
- *                   type: string
- *                   description: The task status
- *                   example: In Progress
- *                 deadline:
- *                   type: string
- *                   format: date-time
- *                   description: The task deadline
- *                   example: 2024-12-31T23:59:59Z
- *       404:
- *         description: Task not found
- */
-router.get("/findByName/:name", async(request:Request, res:Response<Task>) => {
-    const name = String(request.params.name);
-    await service.findByName(name).then(task => {
-        res.send(task);
-    }).catch(err => {
-        console.log(err);
-        res.status(404).send(err);
-    })
-})
-
 
 export default router;
