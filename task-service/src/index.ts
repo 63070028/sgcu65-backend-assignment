@@ -3,7 +3,6 @@ import dotnev from "dotenv";
 import { AppDataSource } from "./data-source";
 import { setupSwagger } from "./swagger";
 import taskRouter from "./task/TaskRouter";
-import userRouter from "./user/UserRouter";
 
 
 dotnev.config();
@@ -13,7 +12,6 @@ setupSwagger(app);
 
 app.use(express.json());
 app.use("/tasks", taskRouter);
-app.use("/users", userRouter);
 
 
 app.listen(port, async ()=>{

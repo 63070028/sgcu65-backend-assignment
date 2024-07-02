@@ -22,6 +22,7 @@ export class TaskServiceImpl implements TaskService{
             return Promise.reject(error);
         }
     }
+
     async findById(id:number):Promise<Task>{
         try {
             const task = await this.repository.findOneBy({id: id});
@@ -35,14 +36,10 @@ export class TaskServiceImpl implements TaskService{
         }
     }
 
-    async findByName(name:string):Promise<Task>{
+    async findByName(name:string):Promise<Task[]>{
         try {
-            const task = await this.repository.findOneBy({name: name});
-            if(task != null){
-                return task;
-            }else{
-                return Promise.reject("task not found");
-            }
+            const tasks = await this.repository.findBy({name: name});
+            return tasks;
         } catch (error) {
             return Promise.reject(error);
         }
@@ -55,7 +52,7 @@ export class TaskServiceImpl implements TaskService{
             request.content,
             request.status,
             request.deadline,
-            request.users);
+            request.userId);
             
             return this.repository.save(task);
         } catch (error) {
@@ -71,6 +68,7 @@ export class TaskServiceImpl implements TaskService{
             task.content = request.content;
             task.status = request.status;
             task.deadline = request.deadline;
+            task.userId = request.userId;
 
             return this.repository.save(task);
         } catch (error) {

@@ -37,6 +37,9 @@ const service = new TaskServiceImpl(repository);
  *                     type: string
  *                   deadline:
  *                     type: string
+ *                   userId:
+ *                     type: integer
+ *
  */
 router.get("/", async (req:Request, res:Response<Task[]>)=>{
     await service.findAll().then(tasks => {
@@ -70,25 +73,16 @@ router.get("/", async (req:Request, res:Response<Task[]>)=>{
  *               properties:
  *                 id:
  *                   type: integer
- *                   description: The task ID
- *                   example: 1
  *                 name:
  *                   type: string
- *                   description: The task name
- *                   example: Do the dishes
  *                 content:
  *                   type: string
- *                   description: The task content
- *                   example: Wash all the dishes in the sink
  *                 status:
  *                   type: string
- *                   description: The task status
- *                   example: In Progress
  *                 deadline:
  *                   type: string
- *                   format: date-time
- *                   description: The task deadline
- *                   example: 2024-12-31T23:59:59Z
+ *                 userId:
+ *                    type: integer
  *       404:
  *         description: Task not found
  */
@@ -117,40 +111,31 @@ router.get("/findById/:id", async(request:Request, res:Response<Task>) => {
  *         description: The task name
  *     responses:
  *       200:
- *         description: A single task
+ *         description: A list of tasks
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                   description: The task ID
- *                   example: 1
- *                 name:
- *                   type: string
- *                   description: The task name
- *                   example: Do the dishes
- *                 content:
- *                   type: string
- *                   description: The task content
- *                   example: Wash all the dishes in the sink
- *                 status:
- *                   type: string
- *                   description: The task status
- *                   example: In Progress
- *                 deadline:
- *                   type: string
- *                   format: date-time
- *                   description: The task deadline
- *                   example: 2024-12-31T23:59:59Z
- *       404:
- *         description: Task not found
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   name:
+ *                     type: string
+ *                   content:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ *                   deadline:
+ *                     type: string
+ *                   userId:
+ *                     type: integer
  */
-router.get("/findByName/:name", async(request:Request, res:Response<Task>) => {
+router.get("/findByName/:name", async(request:Request, res:Response<Task[]>) => {
     const name = String(request.params.name);
-    await service.findByName(name).then(task => {
-        res.send(task);
+    await service.findByName(name).then(tasks => {
+        res.send(tasks);
     }).catch(error => {
         console.log(error);
         res.status(404).send(error);
@@ -179,21 +164,9 @@ router.get("/findByName/:name", async(request:Request, res:Response<Task>) => {
  *                 type: string
  *               deadline:
  *                 type: string
- *               users:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                     email:
- *                       type: string
- *                     firstname:
- *                       type: string
- *                     surname:
- *                       type: string
- *                     role:
- *                       type: string
+ *               userId:
+ *                 type: integer
+ * 
  *     responses:
  *       200:
  *         description: Task created
@@ -212,6 +185,8 @@ router.get("/findByName/:name", async(request:Request, res:Response<Task>) => {
  *                   type: string
  *                 deadline:
  *                   type: string
+ *                 userId:
+ *                    type: integer
  */
 router.post("/", async (req:Request<CreateTaskRequest>, res:Response<Task>) => {
     await service.create(req.body).then(task => {
@@ -244,6 +219,8 @@ router.post("/", async (req:Request<CreateTaskRequest>, res:Response<Task>) => {
  *                 type: string
  *               deadline:
  *                 type: string
+ *               userId:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Task created
@@ -262,6 +239,8 @@ router.post("/", async (req:Request<CreateTaskRequest>, res:Response<Task>) => {
  *                   type: string
  *                 deadline:
  *                   type: string
+ *                 userId:
+ *                   type: integer
  */
 router.put("/", async(request:Request<UpdateTaskRequest>, res:Response<Task>) => {
     await service.update(request.body).then(task => {
@@ -294,8 +273,6 @@ router.put("/", async(request:Request<UpdateTaskRequest>, res:Response<Task>) =>
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: integer
  *                 name:
  *                   type: string
  *                 content:
@@ -304,6 +281,8 @@ router.put("/", async(request:Request<UpdateTaskRequest>, res:Response<Task>) =>
  *                   type: string
  *                 deadline:
  *                   type: string
+ *                 userId:
+ *                   type: integer
  */
 router.delete("/", async(request:Request<RemoveTaskRequest>, res:Response<Task>) => {
     await service.remove(request.body).then(task => {

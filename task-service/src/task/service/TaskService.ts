@@ -11,7 +11,7 @@ export interface TaskService{
     
     findById(id:number):Promise<Task>
 
-    findByName(name:string):Promise<Task>
+    findByName(name:string):Promise<Task[]>
 
     create(request:CreateTaskRequest):Promise<Task>
 

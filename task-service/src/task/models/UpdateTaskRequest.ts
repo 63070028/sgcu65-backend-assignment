@@ -4,4 +4,5 @@ export interface UpdateTaskRequest{
     content:string
     status:string
     deadline:string
+    userId:number
 }
